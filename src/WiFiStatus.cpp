@@ -3,26 +3,25 @@
 WiFiStatus::WiFiStatus(AsyncWebServer *server) : _server(server) {
   _server->on(WIFI_STATUS_SERVICE_PATH, HTTP_GET, std::bind(&WiFiStatus::wifiStatus, this, std::placeholders::_1));
 
-  _onStationModeConnectedHandler = WiFi.onStationModeConnected(onStationModeConnected);
-  _onStationModeDisconnectedHandler = WiFi.onStationModeDisconnected(onStationModeDisconnected);
-  _onStationModeGotIPHandler = WiFi.onStationModeGotIP(onStationModeGotIP);
+  WiFi.onEvent(onStationModeConnected, WiFiEvent_t::SYSTEM_EVENT_STA_CONNECTED); 
+  WiFi.onEvent(onStationModeDisconnected, WiFiEvent_t::SYSTEM_EVENT_STA_DISCONNECTED); 
+  WiFi.onEvent(onStationModeGotIP, WiFiEvent_t::SYSTEM_EVENT_STA_GOT_IP); 
 }
 
-void WiFiStatus::onStationModeConnected(const WiFiEventStationModeConnected& event) {
-  Serial.print("WiFi Connected. SSID=");
-  Serial.println(event.ssid);
+void WiFiStatus::onStationModeConnected(WiFiEvent_t event, WiFiEventInfo_t info) {
+  Serial.print("WiFi Connected.");
 }
 
-void WiFiStatus::onStationModeDisconnected(const WiFiEventStationModeDisconnected& event) {
+void WiFiStatus::onStationModeDisconnected(WiFiEvent_t event, WiFiEventInfo_t info) {
   Serial.print("WiFi Disconnected. Reason code=");
-  Serial.println(event.reason);
+  Serial.println(info.disconnected.reason);
 }
 
-void WiFiStatus::onStationModeGotIP(const WiFiEventStationModeGotIP& event) {
+void WiFiStatus::onStationModeGotIP(WiFiEvent_t event, WiFiEventInfo_t info) {
   Serial.print("WiFi Got IP. localIP=");
-  Serial.print(event.ip);
+  Serial.print(WiFi.localIP().toString());
   Serial.print(", hostName=");
-  Serial.println(WiFi.hostname());
+  Serial.println(WiFi.getHostname());
 }
 
 void WiFiStatus::wifiStatus(AsyncWebServerRequest *request) {

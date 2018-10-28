@@ -1,8 +1,8 @@
 #ifndef WiFiScanner_h
 #define WiFiScanner_h
 
-#include <ESP8266WiFi.h>
-#include <ESPAsyncTCP.h>
+#include <WiFi.h>
+#include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <ArduinoJson.h>
 #include <AsyncJson.h>

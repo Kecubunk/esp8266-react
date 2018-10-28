@@ -2,8 +2,8 @@
 #define OTASettingsService_h
 
 #include <SettingsService.h>
-#include <ESP8266WiFi.h> // ??
-#include <ESP8266mDNS.h>
+#include <WiFi.h>
+#include <ESPmDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
@@ -20,8 +20,7 @@ class OTASettingsService : public SettingsService {
 
     OTASettingsService(AsyncWebServer* server, FS* fs);
     ~OTASettingsService();
-
-    void begin();
+    
     void loop();
 
   protected:
@@ -37,6 +36,7 @@ class OTASettingsService : public SettingsService {
     int _port;
     String _password;
 
+    void onStationModeGotIP(WiFiEvent_t event, WiFiEventInfo_t info);
     void configureArduinoOTA();
 
 };

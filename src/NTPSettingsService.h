@@ -2,7 +2,7 @@
 #define NTPSettingsService_h
 
 #include <SettingsService.h>
-#include <ESP8266WiFi.h>
+#include <WiFi.h>
 
 #include <TimeLib.h>
 #include <NtpClientLib.h>
@@ -35,9 +35,6 @@ class NTPSettingsService : public SettingsService {
 
   private:
 
-    WiFiEventHandler _onStationModeDisconnectedHandler;
-    WiFiEventHandler _onStationModeGotIPHandler;
-
     String _server;
     int _interval;
 
@@ -45,8 +42,8 @@ class NTPSettingsService : public SettingsService {
     bool _syncEventTriggered = false;
     NTPSyncEvent_t _ntpEvent;
 
-    void onStationModeGotIP(const WiFiEventStationModeGotIP& event);
-    void onStationModeDisconnected(const WiFiEventStationModeDisconnected& event);
+    void onStationModeGotIP(WiFiEvent_t event, WiFiEventInfo_t info);
+    void onStationModeDisconnected(WiFiEvent_t event, WiFiEventInfo_t info);
 
     void configureNTP();
     void processSyncEvent(NTPSyncEvent_t ntpEvent);

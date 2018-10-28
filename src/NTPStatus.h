@@ -1,8 +1,8 @@
 #ifndef NTPStatus_h
 #define NTPStatus_h
 
-#include <ESP8266WiFi.h>
-#include <ESPAsyncTCP.h>
+#include <WiFi.h>
+#include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <ArduinoJson.h>
 #include <AsyncJson.h>

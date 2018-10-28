@@ -1,8 +1,9 @@
 #ifndef SettingsService_h
 #define SettingsService_h
 
-#include <ESP8266WiFi.h>
-#include <ESPAsyncTCP.h>
+#include <WiFi.h>
+#include <SPIFFS.h>
+#include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <FS.h>
 #include <AsyncJson.h>

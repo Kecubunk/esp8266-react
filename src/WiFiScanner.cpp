@@ -25,8 +25,7 @@ void WiFiScanner::listNetworks(AsyncWebServerRequest *request) {
       network["ssid"] = WiFi.SSID(i);
       network["bssid"] = WiFi.BSSIDstr(i);
       network["channel"] = WiFi.channel(i);
-      network["encryption_type"] = WiFi.encryptionType(i);
-      network["hidden"] = WiFi.isHidden(i);
+      network["encryption_type"] = (uint8_t) WiFi.encryptionType(i);
     }
     response->setLength();
     request->send(response);

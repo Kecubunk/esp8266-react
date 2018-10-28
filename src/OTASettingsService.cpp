@@ -1,14 +1,12 @@
 #include <OTASettingsService.h>
 
-OTASettingsService::OTASettingsService(AsyncWebServer* server, FS* fs) : SettingsService(server, fs, OTA_SETTINGS_SERVICE_PATH, OTA_SETTINGS_FILE) {}
+OTASettingsService::OTASettingsService(AsyncWebServer* server, FS* fs) : SettingsService(server, fs, OTA_SETTINGS_SERVICE_PATH, OTA_SETTINGS_FILE) {
+  WiFi.onEvent(std::bind(&OTASettingsService::onStationModeGotIP, this, std::placeholders::_1, std::placeholders::_2), WiFiEvent_t::SYSTEM_EVENT_STA_GOT_IP);
+}
 
 OTASettingsService::~OTASettingsService() {}
 
-void OTASettingsService::begin() {
-  // load settings
-  SettingsService::begin();
-
-  // configure arduino OTA
+void OTASettingsService::onStationModeGotIP(WiFiEvent_t event, WiFiEventInfo_t info) {
   configureArduinoOTA();
 }
 
@@ -45,6 +43,7 @@ void OTASettingsService::configureArduinoOTA() {
     _arduinoOTA = NULL;
   }
   if (_enabled) {
+     Serial.println("Starting OTA Update Service");
     _arduinoOTA = new ArduinoOTAClass;
     _arduinoOTA->setPort(_port);
     _arduinoOTA->setPassword(_password.c_str());

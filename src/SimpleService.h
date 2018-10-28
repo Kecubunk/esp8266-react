@@ -1,8 +1,8 @@
 #ifndef Service_h
 #define Service_h
 
-#include <ESP8266WiFi.h>
-#include <ESPAsyncTCP.h>
+#include <WiFi.h>
+#include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include <AsyncJson.h>
 #include <ArduinoJson.h>
