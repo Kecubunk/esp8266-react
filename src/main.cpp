@@ -18,6 +18,8 @@
 #include <NTPStatus.h>
 #include <OTASettingsService.h>
 #include <APStatus.h>
+#include <LoopStation.h>
+#include <ADCFun.h>
 
 #define SERIAL_BAUD_RATE 115200
 
@@ -32,8 +34,21 @@ WiFiScanner wifiScanner = WiFiScanner(&server);
 WiFiStatus wifiStatus = WiFiStatus(&server);
 NTPStatus ntpStatus = NTPStatus(&server);
 APStatus apStatus = APStatus(&server);
+//LoopStation loopStation = LoopStation(&server);
+ADCFun loopStation = ADCFun();
 
+hw_timer_t * timer = NULL;
+portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
+ 
+void IRAM_ATTR onSampleTriggered() {
+  portENTER_CRITICAL_ISR(&timerMux);
+  //loopStation.onSampleTriggered();
+  loopStation.onSampleTriggered();
+  portEXIT_CRITICAL_ISR(&timerMux); 
+}
+ 
 void setup() {
+
     // Disable wifi config persistance
     WiFi.persistent(false);
 
@@ -45,7 +60,8 @@ void setup() {
     otaSettingsService.begin();
     apSettingsService.begin();
     wifiSettingsService.begin();
-
+    loopStation.begin();
+    
     // Serving static resources from /www/
     server.serveStatic("/js/", SPIFFS, "/www/js/");
     server.serveStatic("/css/", SPIFFS, "/www/css/");
@@ -72,10 +88,17 @@ void setup() {
     #endif
 
     server.begin();
+/*
+    // hardware timer.. just here for now, will move later.
+    timer = timerBegin(0, 80, true);
+    timerAttachInterrupt(timer, &onSampleTriggered, true);
+    timerAlarmWrite(timer, 45, true);
+    timerAlarmEnable(timer); */
 }
 
-void loop() {
+void loop() { 
   apSettingsService.loop();
   ntpSettingsService.loop();
-  otaSettingsService.loop();
+  otaSettingsService.loop();  
+  loopStation.onSampleTriggered();
 }
